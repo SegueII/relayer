@@ -56,17 +56,24 @@ coins="100000000000stake,100000000000samoleans"
 
 $BINARY --home $CHAINDIR/$CHAINID --chain-id $CHAINID init $CHAINID &> /dev/null
 sleep 1
+echo "init -------------------------------------"
 $BINARY --home $CHAINDIR/$CHAINID keys add validator --keyring-backend="test" --output json > $CHAINDIR/$CHAINID/validator_seed.json 2> /dev/null
+echo "keys add validator -------------------------------------"
 sleep 1
 $BINARY --home $CHAINDIR/$CHAINID keys add user --keyring-backend="test" --output json > $CHAINDIR/$CHAINID/key_seed.json 2> /dev/null
+echo "keys add user -------------------------------------"
 sleep 1
 $BINARY --home $CHAINDIR/$CHAINID add-genesis-account $($BINARY --home $CHAINDIR/$CHAINID keys --keyring-backend="test" show user -a) $coins &> /dev/null
+echo "add-genesis-account -------------------------------------"
 sleep 1
 $BINARY --home $CHAINDIR/$CHAINID add-genesis-account $($BINARY --home $CHAINDIR/$CHAINID keys --keyring-backend="test" show validator -a) $coins  &> /dev/null
+echo "add-genesis-account -------------------------------------"
 sleep 1
-$BINARY --home $CHAINDIR/$CHAINID gentx validator --keyring-backend="test" --chain-id $CHAINID &> /dev/null
+$BINARY --home $CHAINDIR/$CHAINID gentx validator 100000000000stake --keyring-backend="test" --chain-id $CHAINID &> /dev/null
+echo "gentx -------------------------------------"
 sleep 1
 $BINARY --home $CHAINDIR/$CHAINID collect-gentxs &> /dev/null
+echo "collect-gentxs -------------------------------------"
 sleep 1
 
 # Check platform
