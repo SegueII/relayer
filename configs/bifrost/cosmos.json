@@ -1,7 +1,7 @@
 {
-    "key": "testkey",
-    "chain-id": "atom",
-    "rpc-addr": "http://localhost:26657",
+    "key": "rlykey",
+    "chain-id": "cosmos",
+    "rpc-addr": "http://localhost:26557",
     "account-prefix": "cosmos",
     "gas-adjustment": 1.5,
     "gas-prices": "0.025stake",

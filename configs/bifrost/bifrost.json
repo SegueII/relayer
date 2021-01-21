@@ -1,6 +1,6 @@
 {
     "src": {
-        "chain-id": "atom",
+        "chain-id": "iris",
         "client-id": "",
         "connection-id": "",
         "channel-id": "",
@@ -9,7 +9,7 @@
         "version": "ics20-1"
     },
     "dst": {
-        "chain-id": "iris",
+        "chain-id": "cosmos",
         "client-id": "",
         "connection-id": "",
         "channel-id": "",

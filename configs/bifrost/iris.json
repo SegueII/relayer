@@ -1,7 +1,7 @@
 {
-    "key": "testkey",
+    "key": "rlykey",
     "chain-id": "iris",
-    "rpc-addr": "http://localhost:26557",
+    "rpc-addr": "http://localhost:26657",
     "account-prefix": "iaa",
     "gas-adjustment": 1.5,
     "gas-prices": "0.025stake",
