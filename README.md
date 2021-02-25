@@ -11,8 +11,6 @@
 **配置 relayer**
 
 ```bash
-make install
-
 rly config init
 rly config add-dir configs/bifrost/
 
@@ -75,8 +73,6 @@ rly tx transfer cosmos iris 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92
 ```bash
 
 iris tx ibc-transfer transfer transfer channel-0 $(rly keys show cosmos) 1000000samoleans \
-    --absolute-timeouts \
-    --packet-timeout-timestamp 0 \
     --from user \
     --home data/iris \
     --keyring-backend test \
@@ -86,8 +82,6 @@ iris tx ibc-transfer transfer transfer channel-0 $(rly keys show cosmos) 1000000
     -y
 
 gaiad tx ibc-transfer transfer transfer channel-0 $(rly keys show iris) 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92B006199894CF1824DF9AC7C \
-    --absolute-timeouts \
-    --packet-timeout-timestamp 0 \
     --from user \
     --home data/cosmos \
     --keyring-backend test \
