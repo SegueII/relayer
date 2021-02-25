@@ -1,6 +1,6 @@
 {
     "key": "rlykey",
-    "chain-id": "iris",
+    "chain-id": "irishub-1",
     "rpc-addr": "http://localhost:26657",
     "account-prefix": "iaa",
     "gas-adjustment": 1.5,

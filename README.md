@@ -14,11 +14,11 @@
 rly config init
 rly config add-dir configs/bifrost/
 
-rly keys restore iris rlykey "$(jq -r '.mnemonic' data/iris/key_seed.json)"
-rly keys restore cosmos rlykey "$(jq -r '.mnemonic' data/cosmos/key_seed.json)"
+rly keys restore irishub-1 rlykey "$(jq -r '.mnemonic' data/irishub-1/key_seed.json)"
+rly keys restore cosmoshub-4 rlykey "$(jq -r '.mnemonic' data/cosmoshub-4/key_seed.json)"
 
-rly light init iris -f
-rly light init cosmos -f
+rly light init irishub-1 -f
+rly light init cosmoshub-4 -f
 ```
 
 **查看连接信息**
