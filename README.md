@@ -11,6 +11,7 @@
 **配置 relayer**
 
 ```bash
+rm -rf ~/.relayer
 rly config init
 rly config add-chains configs/bifrost/
 rly config add-paths configs/path/
