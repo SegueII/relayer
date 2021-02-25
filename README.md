@@ -12,7 +12,8 @@
 
 ```bash
 rly config init
-rly config add-dir configs/bifrost/
+rly config add-chains configs/bifrost/
+rly config add-paths configs/path/
 
 rly keys restore irishub-1 rlykey "$(jq -r '.mnemonic' data/irishub-1/key_seed.json)"
 rly keys restore cosmoshub-4 rlykey "$(jq -r '.mnemonic' data/cosmoshub-4/key_seed.json)"
