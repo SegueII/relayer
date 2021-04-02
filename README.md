@@ -37,18 +37,24 @@ rly paths list
 rly tx link bifrost -d -o 3s
 ```
 
+rly q clients irishub-1
+rly q clients cosmoshub-4
+
+iris q ibc client states --node tcp://localhost:26657 -o json
+gaiad q ibc client states --node tcp://localhost:26557 -o json --log_level info
+
 **查看账户余额**
 
 ```bash
-# 使用 relayer 查询 （存在跨链资产时报错）
-rly q balance iris
-rly q balance cosmos
+# 使用 relayer 查询
+rly q balance irishub-1
+rly q balance cosmoshub-4
 ```
 
 ```bash
 # 链上查询
-iris q bank balances $(rly keys show iris) --node tcp://localhost:26657
-gaiad q bank balances $(rly keys show cosmos) --node tcp://localhost:26557
+iris q bank balances $(rly keys show irishub-1) --node tcp://localhost:26657
+gaiad q bank balances $(rly keys show cosmoshub-4) --node tcp://localhost:26557 --log_level info
 ```
 
 **启动 relayer**

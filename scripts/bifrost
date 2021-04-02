@@ -20,7 +20,7 @@ fi
 
 # Display software version for testers
 echo "IRIS & GAIA VERSION INFO:"
-gaiad version
+gaiad version --log_level info
 iris version
 
 # Ensure jq is installed
