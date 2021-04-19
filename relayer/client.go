@@ -32,7 +32,7 @@ func (c *Chain) CreateClients(dst *Chain, allowUpdateAfterExpiry,
 	}
 
 	// Create client for the destination chain on the source chain if client id is unspecified
-	if c.PathEnd.ClientID == "" {
+	if true {
 		if c.debug {
 			c.logCreateClient(dst, dstUpdateHeader.Header.Height)
 		}
@@ -103,7 +103,7 @@ func (c *Chain) CreateClients(dst *Chain, allowUpdateAfterExpiry,
 	}
 
 	// Create client for the source chain on destination chain if client id is unspecified
-	if dst.PathEnd.ClientID == "" {
+	if true {
 		if dst.debug {
 			dst.logCreateClient(c, srcUpdateHeader.Header.Height)
 		}
