@@ -126,27 +126,22 @@ func UpdateClientsFromChains(src, dst *relayer.Chain, thresholdTime time.Duratio
 		err                          error
 	)
 
-	eg := new(errgroup.Group)
-	eg.Go(func() error {
-		srcTimeExpiry, err = relayer.AutoUpdateClient(src, dst, thresholdTime)
-		return err
-	})
-	eg.Go(func() error {
-		dstTimeExpiry, err = relayer.AutoUpdateClient(dst, src, thresholdTime)
-		return err
-	})
-	if err := eg.Wait(); err != nil {
+	srcTimeExpiry, err = relayer.AutoUpdateClient(src, dst, thresholdTime)
+	if err != nil {
+		return 0, err
+	}
+
+	dstTimeExpiry, err = relayer.AutoUpdateClient(dst, src, thresholdTime)
+	if err != nil {
 		return 0, err
 	}
 
 	if srcTimeExpiry <= 0 {
-		return 0, fmt.Errorf("client (%s) of chain: %s is expired",
-			src.PathEnd.ClientID, src.ChainID)
+		return 0, fmt.Errorf("client (%s) of chain: %s is expired", src.PathEnd.ClientID, src.ChainID)
 	}
 
 	if dstTimeExpiry <= 0 {
-		return 0, fmt.Errorf("client (%s) of chain: %s is expired",
-			dst.PathEnd.ClientID, dst.ChainID)
+		return 0, fmt.Errorf("client (%s) of chain: %s is expired", dst.PathEnd.ClientID, dst.ChainID)
 	}
 
 	minTimeExpiry := math.Min(float64(srcTimeExpiry), float64(dstTimeExpiry))
