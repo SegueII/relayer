@@ -126,62 +126,87 @@ steps are typically performed:
 ## Features
 
 The relayer supports the following:
+
 - creating/updating IBC Tendermint light clients
 - creating IBC connections
 - creating IBC transfer channels.
 - initiating a cross chain transfer
 - relaying a cross chain transfer transaction, its acknowledgement, and timeouts
 - relaying from state
-- relaying from streaming events 
+- relaying from streaming events
 - sending an UpgradePlan proposal for an IBC breaking upgrade
-- upgrading clients after a counterparty chain has performed an upgrade for IBC breaking changes
+- upgrading clients after a counter-party chain has performed an upgrade for IBC breaking changes
 
 The relayer currently cannot:
+
 - create clients with user chosen parameters (such as UpgradePath)
-- submit IBC client unfreezing proposals 
-- monitor and submit misbehaviour for clients
+- submit IBC client unfreezing proposals
+- monitor and submit misbehavior for clients
 - use IBC light clients other than Tendermint such as Solo Machine
 - connect to chains which don't implement/enable IBC
 - connect to chains using a different IBC implementation (chains not using SDK's `x/ibc` module)
 
 ## Relayer Terminology
 
-A Path in the relayer represents one very specific path followed to get from one chain to another. 
-Two chains may have many different paths between them. Any path with different clients, connections,
-or channels are considered unqiuely different and non-fungible. 
+A `path` represents an abstraction between two IBC-connected networks. Specifically,
+the `path` abstraction contains metadata about a source chain, a destination
+chain and a relaying strategy between thw two networks. The metadata for both
+the source and destination networks contains the following:
 
-When using with live networks, it is advised to pre-select your desired parameters for your client, 
-connection, and channel. The relayer will automatically reuse any existing clients that match your
-configurations since clients, connections, and channels are public goods (no one has control over 
-them). 
+- `chain-id`: The chain ID of the network.
+- `client-id`: The client ID on the corresponding chain representing the other chain's light client.
+- `connection-id`: The connection ID on the corresponding chain representing a connection to the other chain.
+- `channel-id`: The channel ID on the corresponding chain's connection representing a channel on the other chain.
+- `port-id`: The IBC port ID which a relevant module binds to on the corresponding chain.
+- `order`: Determines if packets from a sending module must be `ORDERED` or `UNORDERED`.
+- `version`: IBC version.
+
+Two chains may have many different paths between them. Any path with different
+clients, connections, or channels are considered uniquely different and non-fungible.
+
+When using with live networks, it is advised to pre-select your desired parameters
+for your clients, connections, and channels. The relayer will automatically
+reuse any existing clients that match your configurations since clients,
+connections, and channels are public goods (no one has control over them).
 
 ## Recommended Pruning Settings
 
-The relayer relies on old headers and proofs constructed at past block heights to facilitate IBC. 
-For this reason, connected full nodes are recommended to prune old blocks once they have passed
-the unbonding period of the chain. 
+The relayer relies on old headers and proofs constructed at past block heights
+to facilitate correct[IBC](https://ibcprotocol.org/) behavior. For this reason,
+connected full nodes may prune old blocks once they have passed the unbonding
+period of the chain but not before. Not pruning at all is not necessary for a
+fully functional relayer, however, pruning everything will lead to many issues!
 
-Here are the settings used to configure SDK based nodes:
-```
---pruning=custom --pruning-keep-recent=362880 --pruning-keep-every=0 --pruning-interval=100
-```
+Here are the settings used to configure SDK-based full nodes (assuming 3 week unbonding period):
 
-`362880 (3*7*24*60*60 / 5 = 362880)` represents a 3 week unbonding period (assuming 5 seconds per block). 
-
-Note: 
-```
---pruning-keep-every=0 --pruning-interval=100
+```shell
+... --pruning=custom --pruning-keep-recent=362880 --pruning-keep-every=0 --pruning-interval=100
 ```
 
-can be modified to your desired settings. 
+`362880 (3*7*24*60*60 / 5 = 362880)` represents a 3 week unbonding period (assuming 5 seconds per block).
 
-Pruning nothing is not necessary for a fully functional relayer. Pruning everything will lead to many issues. 
+Note, operators can tweak `--pruning-keep-every` and `--pruning-interval` to their
+liking.
 
-## Demoing the Relayer
+## Compatibility Table
+
+| chain                                    | build                                                                                                                                                   | supported ports |
+|------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| [gaia](https://github.com/cosmos/gaia)   | ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cosmos/relayer/TESTING%20-%20gaia%20to%20gaia%20integration?style=flat-square)  | transfer        |
+| [akash](https://github.com/ovrclk/akash) | ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cosmos/relayer/TESTING%20-%20akash%20to%20gaia%20integration?style=flat-square) | transfer        |
+
+## Testnet
+
+If you would like to join a relayer testnet, please [check out the instructions](./testnets/README.md).
+
+## Demo
 
 ![Demo](./docs/images/demo.gif)
 
-While the relayer is under active development, it is meant primarily as a learning tool to better understand the Inter-Blockchain Communication (IBC) protocol. In that vein, the following demo demonstrates the core functionality which will remain even after the changes:
+While the relayer is under active development, it is meant primarily as a learning
+tool to better understand the Inter-Blockchain Communication (IBC) protocol. In
+that vein, the following demo demonstrates the core functionality which will
+remain even after the changes:
 
 ```bash
 # ensure go and jq are installed 
@@ -217,14 +242,16 @@ $ rly q bal ibc-1
 # Then send some tokens between the chains
 $ rly tx transfer ibc-0 ibc-1 1000000samoleans $(rly chains address ibc-1)
 $ rly tx relay demo -d
+$ rly tx acks demo -d
 
 # See that the transfer has completed
 $ rly q bal ibc-0
 $ rly q bal ibc-1
 
 # Send the tokens back to the account on ibc-0
-$ rly tx xfer ibc-1 ibc-0 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92B006199894CF1824DF9AC7C $(rly ch addr ibc-0)
-$ rly tx rly demo -d
+$ rly tx transfer ibc-1 ibc-0 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92B006199894CF1824DF9AC7C $(rly chains addr ibc-0)
+$ rly tx relay demo -d
+$ rly tx acks demo -d
 
 # See that the return trip has completed
 $ rly q bal ibc-0
