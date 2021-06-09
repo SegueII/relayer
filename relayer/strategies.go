@@ -3,6 +3,7 @@ package relayer
 import (
 	"context"
 	"fmt"
+	"time"
 
 	tmservice "github.com/tendermint/tendermint/libs/service"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
@@ -58,18 +59,24 @@ func RunStrategy(src, dst *Chain, strategy Strategy) (func(), error) {
 		return nil, err
 	}
 
-	// Next start the goroutine that listens to each chain for block and tx events
-	go relayerListenLoop(src, dst, doneChan, strategy)
+	// go relayerListenLoop(src, dst, doneChan, strategy)
 
-	// Fetch any unrelayed sequences depending on the channel order
-	sp, err := strategy.UnrelayedSequences(src, dst)
-	if err != nil {
-		return nil, err
-	}
+	go func() {
+		t := time.NewTicker(time.Second * 10)
+		for {
+			select {
+			case <-t.C:
+				sp, err := strategy.UnrelayedSequences(src, dst)
+				if err != nil {
+					panic(err)
+				}
 
-	if err = strategy.RelayPackets(src, dst, sp); err != nil {
-		return nil, err
-	}
+				if err = strategy.RelayPackets(src, dst, sp); err != nil {
+					panic(err)
+				}
+			}
+		}
+	}()
 
 	// Return a function to stop the relayer goroutine
 	return func() { doneChan <- struct{}{} }, nil

@@ -1,6 +1,6 @@
 {
     "key": "rlykey",
-    "chain-id": "cosmoshub-4",
+    "chain-id": "cosmoshub",
     "rpc-addr": "http://localhost:26557",
     "account-prefix": "cosmos",
     "gas-adjustment": 1.5,

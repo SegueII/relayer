@@ -16,11 +16,11 @@ rly config init
 rly config add-chains configs/bifrost/
 rly config add-paths configs/path/
 
-rly keys restore irishub-1 rlykey "$(jq -r '.mnemonic' data/irishub-1/key_seed.json)"
-rly keys restore cosmoshub-4 rlykey "$(jq -r '.mnemonic' data/cosmoshub-4/key_seed.json)"
+rly keys restore irishub rlykey "$(jq -r '.mnemonic' data/irishub/key_seed.json)"
+rly keys restore cosmoshub rlykey "$(jq -r '.mnemonic' data/cosmoshub/key_seed.json)"
 
-rly light init irishub-1 -f
-rly light init cosmoshub-4 -f
+rly light init irishub -f
+rly light init cosmoshub -f
 ```
 
 **查看连接信息**
@@ -37,8 +37,8 @@ rly paths list
 rly tx link bifrost -d -o 3s
 ```
 
-rly q clients irishub-1
-rly q clients cosmoshub-4
+rly q clients irishub
+rly q clients cosmoshub
 
 iris q ibc client states --node tcp://localhost:26657 -o json
 gaiad q ibc client states --node tcp://localhost:26557 -o json --log_level info
@@ -47,14 +47,14 @@ gaiad q ibc client states --node tcp://localhost:26557 -o json --log_level info
 
 ```bash
 # 使用 relayer 查询
-rly q balance irishub-1
-rly q balance cosmoshub-4
+rly q balance irishub
+rly q balance cosmoshub
 ```
 
 ```bash
 # 链上查询
-iris q bank balances $(rly keys show irishub-1) --node tcp://localhost:26657
-gaiad q bank balances $(rly keys show cosmoshub-4) --node tcp://localhost:26557 --log_level info
+iris q bank balances $(rly keys show irishub) --node tcp://localhost:26657
+gaiad q bank balances $(rly keys show cosmoshub) --node tcp://localhost:26557 --log_level info
 ```
 
 **启动 relayer**
@@ -66,14 +66,14 @@ rly start bifrost
 
 ```bash
 # 手动 relay
-rly tx relay bifrost -d
+rly tx relay-packets bifrost -d
 ```
 
 **通过 relayer 转账**
 
 ```bash
-rly tx transfer iris cosmos 1000000samoleans $(rly chains address cosmos)
-rly tx transfer cosmos iris 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92B006199894CF1824DF9AC7C $(rly chains address iris)
+rly tx transfer irishub cosmoshub 1000000samoleans $(rly chains address cosmoshub)
+rly tx transfer cosmoshub irishub 1000000ibc/27A6394C3F9FF9C9DCF5DFFADF9BB5FE9A37C7E92B006199894CF1824DF9AC7C $(rly chains address irishub)
 ```
 
 **通过 cli 转账**

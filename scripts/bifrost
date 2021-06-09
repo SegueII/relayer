@@ -49,8 +49,8 @@ killall iris &>/dev/null
 
 set -e
 
-chainid0=irishub-1
-chainid1=cosmoshub-4
+chainid0=irishub
+chainid1=cosmoshub
 
 echo "Generating gaia and iris configurations..."
 mkdir -p $CHAIN_DATA && cd $CHAIN_DATA && cd ../
